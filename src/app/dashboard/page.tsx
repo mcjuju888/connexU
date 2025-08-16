@@ -51,6 +51,10 @@ export default function DashboardPage() {
         Edit Profile
       </a>
 
+      <a href="/messages" className="inline-block px-3 py-2 rounded bg-green-600 text-white">
+            Go to Messages
+      </a>
+
       <a
         href="/matches"
         className="inline-block px-3 py-2 rounded bg-green-600 text-white"
@@ -62,6 +66,9 @@ export default function DashboardPage() {
         onClick={handleSignOut}
         className="px-3 py-2 rounded bg-red-500 text-white"
       >
+    
+      
+
         Sign out
       </button>
     </main>
