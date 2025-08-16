@@ -1,20 +1,29 @@
 "use client";
+
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
+import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 
 export default function AuthPage() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<string>("");
+  const session = useSession();
+  const supabase = useSupabaseClient();
+  const router = useRouter();
 
+  // if already signed in, go to dashboard
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) setStatus(`Signed in as ${data.session.user.email}`);
-    });
-  }, []);
+    if (session) {
+      router.replace("/dashboard");
+    }
+  }, [session, router]);
 
   async function sendLink() {
     setStatus("Sending magic link...");
-    const { error } = await supabase.auth.signInWithOtp({ email, options: { emailRedirectTo: "http://localhost:3000" }});
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+    });
     setStatus(error ? `Error: ${error.message}` : "Check your email for the sign-in link.");
   }
 
@@ -32,8 +41,18 @@ export default function AuthPage() {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <button onClick={sendLink} className="px-3 py-2 rounded bg-black text-white">Send magic link</button>
-      <button onClick={signOut} className="px-3 py-2 rounded border">Sign out</button>
+      <button
+        onClick={sendLink}
+        className="px-3 py-2 rounded bg-black text-white w-full"
+      >
+        Send magic link
+      </button>
+      <button
+        onClick={signOut}
+        className="px-3 py-2 rounded border w-full"
+      >
+        Sign out
+      </button>
       <p>{status}</p>
     </main>
   );

@@ -1,13 +1,11 @@
 import { supabase } from "@/lib/supabase";
 
-export default async function Home() {
-  const { data, error } = await supabase.from("test").select("*");
-
+export default function Home() {
   return (
     <main className="p-6">
-      <h1 className="text-2xl font-bold">Supabase Test</h1>
-      {error && <p className="text-red-500">Error: {error.message}</p>}
-      <pre>{JSON.stringify(data, null, 2)}</pre>
+      <h1 className="text-3xl font-bold">Welcome to ConnexU 🎓</h1>
+      <p className="mt-2">Please <a href="/auth" className="text-blue-600 underline">sign in</a> to continue.</p>
     </main>
   );
 }
+
